@@ -1,55 +1,99 @@
 package com.ostalf.petstore_for_testers.controller;
 
+import com.ostalf.petstore_for_testers.dto.PetDto;
 import com.ostalf.petstore_for_testers.model.Pet;
 import com.ostalf.petstore_for_testers.repository.PetRepo;
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class PetController {
     @Autowired
     private PetRepo petRepo;
 
     @PostMapping("/pet/add")
-    public Pet postPet(@RequestBody Pet requestBody) {
-        Pet response = petRepo.save(requestBody);
-        log.info("New row: " + petRepo.save(requestBody));
-        return response;
+    public Pet postPet(@RequestBody PetDto petDto) {
+        Pet pet = new Pet();
+
+        pet.setName(petDto.getName());
+        pet.setAge(petDto.getAge());
+
+        try {
+            Pet response = petRepo.save(pet);
+            log.info("Add new row: " + response);
+
+            return response;
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, e.getMessage()
+            );
+        }
     }
 
     @GetMapping("/pet/all")
     public List<Pet> getAllPets() {
         List<Pet> pets = petRepo.findAll();
         log.info("Get all pets: " + pets);
+
         return pets;
     }
 
     @GetMapping("/pet/{id}")
     public Pet getPetById(@PathVariable("id") int id) {
-        Pet pet = petRepo.findById(id).orElseThrow();
-        log.info("Add new row: " + pet);
-        return pet;
+        try {
+            Pet pet = petRepo.findById(id).orElseThrow();
+            log.info("Get row: " + pet);
+            return pet;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage()
+            );
+        }
+
     }
 
-    @PatchMapping("/pet/{id}")
-    public Pet patchPetById(@PathVariable("id") int id, @RequestBody Pet requestBody) {
-        Pet pet = petRepo.findById(id).orElseThrow();
-        pet.setName(requestBody.getName());
-        pet.setId(id);
-        log.info("Change row: " + petRepo.save(pet));
-        return pet;
+    @PutMapping("/pet/{id}")
+    public Pet putPetById(@PathVariable("id") int id, @RequestBody PetDto petDto) {
+        try {
+            Pet pet = petRepo.findById(id).orElseThrow();
+
+            pet.setId(id);
+            pet.setName(petDto.getName());
+            pet.setAge(petDto.getAge());
+
+            log.info("Change row: " + petRepo.saveAndFlush(pet));
+            return pet;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage()
+            );
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, e.getMessage()
+            );
+        }
     }
 
     @DeleteMapping("/pet/{id}")
     public void deletePetById(@PathVariable("id") int id) {
-        Pet pet = petRepo.findById(id).orElseThrow();
-        petRepo.delete(pet);
-        log.info("Delete row where id: " + id);
+        try {
+            Pet pet = petRepo.findById(id).orElseThrow();
+            petRepo.delete(pet);
+            log.info("Delete row where id: " + id);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage()
+            );
+        }
     }
 }

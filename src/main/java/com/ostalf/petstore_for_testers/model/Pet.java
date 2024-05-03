@@ -1,22 +1,29 @@
 package com.ostalf.petstore_for_testers.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.web.bind.annotation.GetMapping;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "pet")
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
+@Table(name = "pet")
+
 public class Pet {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @NotNull
-    private String name;
+    @SequenceGenerator(name = "cat_id_seq", sequenceName = "cat_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "cat_id_seq")
+    @Column(name = "id", nullable = false)
+    Integer id;
+
+    @Column(unique = true)
+    String name;
+
+    int age;
+
 
 }
