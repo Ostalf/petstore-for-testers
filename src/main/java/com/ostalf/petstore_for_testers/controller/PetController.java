@@ -3,6 +3,7 @@ package com.ostalf.petstore_for_testers.controller;
 import com.ostalf.petstore_for_testers.dto.PetDto;
 import com.ostalf.petstore_for_testers.model.Pet;
 import com.ostalf.petstore_for_testers.repository.PetRepo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@Tag(name = "Pet Controller")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
