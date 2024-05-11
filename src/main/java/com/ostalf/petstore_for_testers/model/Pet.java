@@ -20,7 +20,7 @@ public class Pet {
     @Column(name = "id", nullable = false)
     Integer id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     String name;
 
     int age;
