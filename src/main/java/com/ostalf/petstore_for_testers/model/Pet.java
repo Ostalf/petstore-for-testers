@@ -20,10 +20,13 @@ public class Pet {
     @Column(name = "id", nullable = false)
     Integer id;
 
-    @Column(unique = true)
+    @Column(name = "name", unique = true)
     String name;
 
+    @Column(name = "age")
     int age;
 
-
+    @JoinColumn(name = "category_name")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryName")
+    String categoryName;
 }
