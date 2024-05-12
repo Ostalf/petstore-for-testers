@@ -4,6 +4,7 @@ import com.ostalf.petstore_for_testers.dto.PetDto;
 import com.ostalf.petstore_for_testers.model.Pet;
 import com.ostalf.petstore_for_testers.repository.PetRepo;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class PetController {
     private PetRepo petRepo;
 
     @PostMapping("/pet/add")
-    public Pet postPet(@RequestBody PetDto petDto) {
+    public Pet postPet(@NotNull @RequestBody PetDto petDto) {
         Pet pet = new Pet();
 
         pet.setName(petDto.getName());

@@ -1,6 +1,7 @@
 package com.ostalf.petstore_for_testers.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,7 +21,8 @@ public class Pet {
     @Column(name = "id", nullable = false)
     Integer id;
 
-    @Column(name = "name", unique = true)
+    @NotNull
+    @Column(unique = true)
     String name;
 
     @Column(name = "age")
