@@ -15,7 +15,5 @@ import lombok.experimental.FieldDefaults;
 
 public class Category {
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-            @JoinColumn(name = "")
     String categoryName;
 }

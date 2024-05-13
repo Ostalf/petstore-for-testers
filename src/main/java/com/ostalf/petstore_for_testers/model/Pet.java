@@ -28,6 +28,7 @@ public class Pet {
     @Column(name = "age")
     int age;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoryName")
     String categoryName;
 }
