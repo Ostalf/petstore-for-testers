@@ -1,7 +1,10 @@
 package com.ostalf.petstore_for_testers.controller;
 
-import com.ostalf.petstore_for_testers.dto.PetDto;
+import com.ostalf.petstore_for_testers.dto.PetRequestDto;
+import com.ostalf.petstore_for_testers.dto.PetResponseDto;
+import com.ostalf.petstore_for_testers.model.Category;
 import com.ostalf.petstore_for_testers.model.Pet;
+import com.ostalf.petstore_for_testers.repository.CategoryRepo;
 import com.ostalf.petstore_for_testers.repository.PetRepo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
@@ -22,19 +25,31 @@ import java.util.NoSuchElementException;
 public class PetController {
     @Autowired
     private PetRepo petRepo;
+    @Autowired
+    private CategoryRepo categoryRepo;
 
     @PostMapping("/pet/add")
-    public Pet postPet(@NotNull @RequestBody PetDto petDto) {
+    public PetResponseDto postPet(@NotNull @RequestBody PetRequestDto petRequestDto) {
         Pet pet = new Pet();
+        Category category = new Category();
+        PetResponseDto petResponseDto = new PetResponseDto();
 
-        pet.setName(petDto.getName());
-        pet.setAge(petDto.getAge());
+        pet.setName(petRequestDto.getName());
+        pet.setAge(petRequestDto.getAge());
 
+        category.setId(petRequestDto.getCategoryId());
+
+        pet.setCategory(category);
         try {
             Pet response = petRepo.save(pet);
             log.info("Add new row: " + response);
 
-            return response;
+            petResponseDto.setId(pet.getId());
+            petResponseDto.setName(pet.getName());
+            petResponseDto.setAge(pet.getAge());
+            petResponseDto.setCategory(categoryRepo.findById(String.valueOf(petRequestDto.getCategoryId())).orElseThrow());
+            
+            return petResponseDto;
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, e.getMessage()
@@ -65,13 +80,10 @@ public class PetController {
     }
 
     @PutMapping("/pet/{id}")
-    public Pet putPetById(@PathVariable("id") int id, @RequestBody PetDto petDto) {
+    public Pet putPetById(@PathVariable("id") int id, @RequestBody Pet pet) {
         try {
-            Pet pet = petRepo.findById(id).orElseThrow();
-
+            pet = petRepo.findById(id).orElseThrow();
             pet.setId(id);
-            pet.setName(petDto.getName());
-            pet.setAge(petDto.getAge());
 
             log.info("Change row: " + petRepo.saveAndFlush(pet));
             return pet;

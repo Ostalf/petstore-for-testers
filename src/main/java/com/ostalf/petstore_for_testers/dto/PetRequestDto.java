@@ -10,6 +10,13 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
-public class CategoryDto {
+
+public class PetRequestDto {
+
     String name;
+
+    int age;
+
+    int categoryId;
+
 }

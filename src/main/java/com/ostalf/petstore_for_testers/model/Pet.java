@@ -16,19 +16,21 @@ import lombok.experimental.FieldDefaults;
 
 public class Pet {
     @Id
-    @SequenceGenerator(name = "cat_id_seq", sequenceName = "cat_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "cat_id_seq")
-    @Column(name = "id", nullable = false)
+    @NotNull
+    @SequenceGenerator(name = "pet_id_seq", sequenceName = "pet_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "pet_id_seq")
+    @Column(name = "id")
     Integer id;
 
     @NotNull
     @Column(unique = true)
     String name;
 
+    @NotNull
     @Column(name = "age")
     int age;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryName")
-    String categoryName;
+    @ManyToOne(cascade=CascadeType.MERGE)
+    Category category;
+
 }

@@ -1,11 +1,7 @@
 package com.ostalf.petstore_for_testers.controller;
 
-import com.ostalf.petstore_for_testers.dto.CategoryDto;
-import com.ostalf.petstore_for_testers.dto.PetDto;
 import com.ostalf.petstore_for_testers.model.Category;
-import com.ostalf.petstore_for_testers.model.Pet;
 import com.ostalf.petstore_for_testers.repository.CategoryRepo;
-import com.ostalf.petstore_for_testers.repository.PetRepo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +22,8 @@ public class CategoryController {
     private CategoryRepo categoryRepo;
 
     @PostMapping("/category/add")
-    public void postCategory(@RequestBody CategoryDto categoryDto) {
-        Category category = new Category();
+    public void postCategory(@RequestBody Category category) {
         try {
-            category.setCategoryName(categoryDto.getName());
             log.info("Add new row: " + categoryRepo.save(category));
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(
