@@ -20,7 +20,7 @@ public class Pet {
     @SequenceGenerator(name = "pet_id_seq", sequenceName = "pet_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "pet_id_seq")
     @Column(name = "id")
-    Integer id;
+    int id;
 
     @NotNull
     @Column(unique = true)
@@ -30,7 +30,7 @@ public class Pet {
     @Column(name = "age")
     int age;
 
-    @ManyToOne(cascade=CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
     Category category;
 
 }
