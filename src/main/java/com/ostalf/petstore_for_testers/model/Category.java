@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -12,25 +14,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
-@Table(name = "pet")
+@Table(name = "category")
 
-public class Pet {
+public class Category {
     @Id
-    @NotNull
-    @SequenceGenerator(name = "pet_id_seq", sequenceName = "pet_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "pet_id_seq")
-    @Column(name = "id")
+    @SequenceGenerator(name = "category_id_seq", sequenceName = "category_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "category_id_seq")
     int id;
 
     @NotNull
     @Column(unique = true)
     String name;
-
-    @NotNull
-    @Column(name = "age")
-    int age;
-
-    @ManyToOne(cascade = CascadeType.MERGE)
-    Category category;
-
 }
