@@ -32,24 +32,23 @@ public class PetController {
 
     @PostMapping("/pet/add")
     public PetResponseDto postPet(@NotNull @RequestBody PetRequestDto petRequestDto) {
-        Pet pet = new Pet();
-        Category category = new Category();
         PetResponseDto petResponseDto = new PetResponseDto();
-
-        pet.setName(petRequestDto.getName());
-        pet.setAge(petRequestDto.getAge());
+        Category category = new Category();
+        Pet pet = new Pet();
 
         category.setId(petRequestDto.getCategoryId());
 
+        pet.setName(petRequestDto.getName());
+        pet.setAge(petRequestDto.getAge());
         pet.setCategory(category);
         try {
             Pet response = petRepo.save(pet);
             log.info("Add new row: " + response);
 
-            petResponseDto.setId(pet.getId());
-            petResponseDto.setName(pet.getName());
-            petResponseDto.setAge(pet.getAge());
-            petResponseDto.setCategory(categoryRepo.findById(String.valueOf(petRequestDto.getCategoryId())).orElseThrow());
+            petResponseDto.setId(response.getId());
+            petResponseDto.setName(response.getName());
+            petResponseDto.setAge(response.getAge());
+            petResponseDto.setCategory(response.getCategory());
 
             return petResponseDto;
         } catch (DataIntegrityViolationException e) {
@@ -84,12 +83,11 @@ public class PetController {
     public PetResponseDto putPetById(@PathVariable("id") int id, @RequestBody PetRequestDto petRequestDto) {
         try {
             Pet pet = petRepo.findById(id).orElseThrow();
+            Category category = categoryRepo.findById(petRequestDto.getCategoryId()).orElseThrow();
 
             pet.setId(id);
             pet.setName(petRequestDto.getName());
             pet.setAge(petRequestDto.getAge());
-
-            Category category = categoryRepo.findById(String.valueOf(petRequestDto.getCategoryId())).orElseThrow();
             pet.setCategory(category);
 
             log.info("Change row: " + petRepo.saveAndFlush(pet));
