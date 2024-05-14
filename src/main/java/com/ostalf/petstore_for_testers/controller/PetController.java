@@ -1,5 +1,6 @@
 package com.ostalf.petstore_for_testers.controller;
 
+import com.ostalf.petstore_for_testers.dto.CategoryResponseDto;
 import com.ostalf.petstore_for_testers.dto.PetRequestDto;
 import com.ostalf.petstore_for_testers.dto.PetResponseDto;
 import com.ostalf.petstore_for_testers.mapper.PetMapper;
@@ -48,7 +49,7 @@ public class PetController {
             petResponseDto.setId(response.getId());
             petResponseDto.setName(response.getName());
             petResponseDto.setAge(response.getAge());
-            petResponseDto.setCategory(response.getCategory());
+            petResponseDto.setCategoryDto(CategoryResponseDto.builder().id(response.getCategory().getId()).name(response.getCategory().getName()).build());
 
             return petResponseDto;
         } catch (DataIntegrityViolationException e) {

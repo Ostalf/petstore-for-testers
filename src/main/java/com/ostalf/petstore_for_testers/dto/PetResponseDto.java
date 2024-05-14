@@ -19,6 +19,6 @@ public class PetResponseDto {
 
     int age;
 
-    Category category;
+    CategoryResponseDto categoryDto;
 
 }
